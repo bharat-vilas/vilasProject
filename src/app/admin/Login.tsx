@@ -1,26 +1,46 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Typography, message, Card } from "antd";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
+
+// Temporary credentials
+const TEMP_CREDENTIALS = {
+  email: "admin@guruji.com",
+  password: "admin123",
+};
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  // Check if user is already authenticated
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAdmin") === "true";
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
-    try {
-      const res = await axios.post("http://localhost:5000/api/login", values);
-      message.success(res.data.message);
-      localStorage.setItem("isAdmin", "true");
-      navigate("../main-page/app"); // Redirect to main app page
-    } catch (err: any) {
-      message.error(err.response?.data?.message || "Login failed");
-    } finally {
+
+    // Simulate API delay
+    setTimeout(() => {
+      if (
+        values.email === TEMP_CREDENTIALS.email &&
+        values.password === TEMP_CREDENTIALS.password
+      ) {
+        message.success("Login successful!");
+        localStorage.setItem("isAdmin", "true");
+        navigate("/"); // Redirect to main app page
+      } else {
+        message.error(
+          "Invalid email or password. Use admin@guruji.com / admin123"
+        );
+      }
       setLoading(false);
-    }
+    }, 1000);
   };
 
   return (
@@ -36,10 +56,35 @@ const Login = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Card style={{ width: 400, boxShadow: "-moz-initial" }} bordered={false}>
-        <Title level={1} style={{ textAlign: "center" }}>
-          Admin Login
-        </Title>
+      <Card
+        style={{ width: 450, boxShadow: "0 4px 12px rgba(0,0,0,0.15)" }}
+        bordered={false}
+      >
+        <div style={{ textAlign: "center", marginBottom: "25px" }}>
+          <div style={{ marginBottom: "20px" }}>
+            <img
+              src="/GEWlogo2.png"
+              alt="Guruji Engineering Works Logo"
+              style={{
+                height: "70px",
+                width: "auto",
+                objectFit: "contain",
+              }}
+            />
+          </div>
+          <Title
+            level={3}
+            style={{ margin: "0 0 5px 0", color: "#486A47", fontSize: "18px" }}
+          >
+            Welcome to
+          </Title>
+          <Title
+            level={2}
+            style={{ margin: "0 0 20px 0", color: "#486A47", fontSize: "24px" }}
+          >
+            Guruji Engineering Works
+          </Title>
+        </div>
         <Form layout="vertical" onFinish={onFinish}>
           <Form.Item
             name="email"

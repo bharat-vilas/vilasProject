@@ -1,8 +1,15 @@
 import { Card, Table, Typography } from "antd";
 import React from "react";
-import './componentCSS.css'
+import "./componentCSS.css";
+import { COMPANY_CONFIG } from "../config/companyConfig";
 
-function Preview({ clientInfo, quotationDate, quotationRef, items }: any) {
+function Preview({
+  clientInfo,
+  quotationDate,
+  quotationRef,
+  items,
+  quotationSerial,
+}: any) {
   const previewColumns = [
     {
       title: "S.No",
@@ -75,12 +82,25 @@ function Preview({ clientInfo, quotationDate, quotationRef, items }: any) {
     (sum: any, item: any) => sum + item.rate * item.qty,
     0
   );
-  let currentSerial = parseInt(
-    localStorage.getItem("quotationSerial") || "0"
-  );
   return (
-    <div className="quotation-section page-break" style={{ flex: 1, paddingLeft: 10, pageBreakBefore: 'always' }}>
-      <Card title={`Quotation - #${(currentSerial+1).toString().padStart(4, "0")}`} ref={quotationRef}  style={{ paddingBottom: '40px' }} >
+    <div
+      className="quotation-section page-break"
+      style={{ flex: 1, paddingLeft: 10, pageBreakBefore: "always" }}
+    >
+      <Card ref={quotationRef} style={{ paddingBottom: "10px" }}>
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: "15px",
+            fontWeight: "bold",
+            marginBottom: "15px",
+            color: "black",
+            borderBottom: "1px solid black",
+            paddingBottom: "6px",
+          }}
+        >
+          Quotation - #{`${quotationSerial.toString().padStart(4, "0")}`}
+        </div>
         <div
           style={{
             display: "flex",
@@ -89,33 +109,61 @@ function Preview({ clientInfo, quotationDate, quotationRef, items }: any) {
           }}
         >
           <div>
-            <div style={{ fontWeight: "bold", fontSize: "20px" }}>GURUJI</div>
-            <div style={{ fontWeight: "bold", fontSize: "20px" }}>
+            <div
+              style={{ fontWeight: "bold", fontSize: "22px", color: "black" }}
+            >
+              GURUJI
+            </div>
+            <div
+              style={{ fontWeight: "bold", fontSize: "22px", color: "black" }}
+            >
               ENGINEERING
             </div>
-            <div style={{ fontWeight: "bold", fontSize: "20px" }}>WORKS</div>
+            <div
+              style={{ fontWeight: "bold", fontSize: "22px", color: "black" }}
+            >
+              WORKS
+            </div>
           </div>
           <div>
             <img src="/GEWlogo2.png" alt="logo" style={{ height: "120px" }} />
           </div>
         </div>
-        <div style={{ display: "flex", gap: "16px" }}>
-          <Card style={{ flex: 1, background: "#DCFCE7" }}>
+        <div style={{ display: "flex", gap: "12px", marginTop: "0px" }}>
+          <Card style={{ flex: 1, background: "#E6FFE6", padding: "0px" }}>
             {/* Left side content */}
-            <div style={{ fontWeight: "bold" }}>FROM: </div>
-            <div>Mr. Ram Vilas</div>
-            <div>Guruji Engineering Works</div>
-            <div>
-              51, Ambedkar Market, Maharajpur, Sahibabad, Ghaziabad, UP(201010)
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "16px",
+                marginBottom: "4px",
+              }}
+            >
+              FROM:{" "}
             </div>
+            <div style={{ fontSize: "14px" }}>
+              <strong>{COMPANY_CONFIG.name}</strong>
+            </div>
+            <div style={{ fontSize: "14px" }}>{COMPANY_CONFIG.company}</div>
+            <div style={{ fontSize: "14px" }}>{COMPANY_CONFIG.address}</div>
           </Card>
 
-          <Card style={{ flex: 1, background: "#DCFCE7" }}>
+          <Card style={{ flex: 1, background: "#E6FFE6", padding: "0px" }}>
             {/* Right side content */}
-            <div style={{ fontWeight: "bold" }}>TO: </div>
-            <div>{clientInfo.name}</div>
-            <div>{clientInfo.firm}</div>
-            <div>{clientInfo.address}</div>
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "16px",
+                marginBottom: "4px",
+              }}
+            >
+              TO:{" "}
+            </div>
+            <div style={{ fontSize: "14px" }}>
+              <strong>{clientInfo.name}</strong>
+            </div>
+            <div style={{ fontSize: "14px" }}>{clientInfo.firm}</div>
+            <div style={{ fontSize: "14px" }}>{clientInfo.address}</div>
           </Card>
         </div>
         <div
@@ -123,19 +171,19 @@ function Preview({ clientInfo, quotationDate, quotationRef, items }: any) {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "4px",
-            marginBottom: "6px",
+            marginTop: "15px",
+            marginBottom: "15px",
+            padding: "8px",
+            backgroundColor: "#FAFAFA",
+            borderRadius: "6px",
           }}
         >
-          <div
-            style={{ fontWeight: "bold", fontSize: "16px", margin: "10px 0px" }}
-          >
-            Date: {quotationDate ? quotationDate.format("DD/MM/YYYY") : ""}
+          <div style={{ fontWeight: "bold", fontSize: "14px" }}>
+            Quotation Date:{" "}
+            {quotationDate ? quotationDate.format("DD/MM/YYYY") : ""}
           </div>
-          <div
-            style={{ fontWeight: "bold", fontSize: "16px", margin: "10px 0px" }}
-          >
-            GSTIN : 09ENCPM2429A1ZB
+          <div style={{ fontWeight: "bold", fontSize: "14px" }}>
+            GSTIN: {COMPANY_CONFIG.gstin}
           </div>
         </div>
 
@@ -143,57 +191,89 @@ function Preview({ clientInfo, quotationDate, quotationRef, items }: any) {
           dataSource={items}
           columns={previewColumns}
           pagination={false}
+          size="small"
           rowClassName={(record: any, index: number) =>
-            index % 2 === 1 ? "#F3F4F6" : "white"
+            index % 2 === 1 ? "#F8F9FA" : "white"
           }
           summary={() => (
-            <Table.Summary.Row>
+            <Table.Summary.Row style={{ backgroundColor: "#E6FFE6" }}>
               <Table.Summary.Cell index={0} colSpan={4}>
-                <b>Total</b>
+                <b style={{ fontSize: "16px" }}>TOTAL AMOUNT</b>
               </Table.Summary.Cell>
               <Table.Summary.Cell index={1}>
-                <b>{totalAmount.toFixed(2)}</b>
+                <b style={{ fontSize: "16px" }}>₹{totalAmount.toFixed(2)}</b>
               </Table.Summary.Cell>
             </Table.Summary.Row>
           )}
           bordered
         />
+        <div style={{ marginTop: "20px" }}>
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "14px",
+              marginBottom: "8px",
+              color: "black",
+            }}
+          >
+            Terms & Conditions:
+          </div>
+          <div style={{ marginBottom: "5px", fontSize: "12px" }}>
+            <b>1. GST:</b> GST amount will be paid by you from the total amount
+          </div>
+          <div style={{ marginBottom: "5px", fontSize: "12px" }}>
+            <b>2. Acceptance:</b> If you accept this quote then send us the
+            confirmation
+          </div>
+          <div style={{ marginBottom: "8px", fontSize: "12px" }}>
+            <b>3. Validity:</b> This quotation is valid for 30 days from the
+            date of issue
+          </div>
+        </div>
+
         <div
           style={{
             fontWeight: "bold",
-            fontSize: "18px",
-            marginTop: "10px",
-            marginBottom: "10px",
+            fontSize: "14px",
+            marginTop: "15px",
+            marginBottom: "8px",
+            textAlign: "center",
+            color: "#52c41a",
           }}
         >
-          Instructions:
+          Thank you for your business!
         </div>
-        <div style={{ marginBottom: "15px" }}>
-          <b>1. GST amount will be paid by you from the total amount</b> <br />
-          2. If you accept this quote then send us the confirmation
+        <div style={{ textAlign: "center", fontSize: "12px", color: "#666" }}>
+          For any inquiries regarding this quotation, please contact us at:{" "}
+          <b>{COMPANY_CONFIG.email}</b> or{" "}
+          <b>{COMPANY_CONFIG.contact.split(",")[0]}</b>
         </div>
+
         <div
-          style={{ fontWeight: "bold", fontSize: "18px", marginBottom: "10px" , alignContent: "center"}}
+          style={{
+            marginTop: "15px",
+            padding: "8px",
+            backgroundColor: "#FAFAFA",
+            borderRadius: "4px",
+          }}
         >
-          Thank you for your business.
-        </div>
-        <div>
-          If you have any inquiries concerning this quote <br />
-          please contact :{" "}
-          <b>Mr. Ram Vilas 9990260536, Mr. Krishan Vilas 7838738789</b> <br />
-          <b>ramv60074@gmail.com</b>
-        </div>
-        <div
-          style={{ fontWeight: "bold", fontSize: "18px", marginTop: "10px", marginBottom: "8px" }}
-        >
-          Note:
-        </div>
-        <div style={{fontSize: "15px"}}>
-          We also provide the following services: <br />
-          All type of sheet fabrication work <br />
-          Machinery Part <br />
-          Gear <br />
-          Machine Maintenance <br />
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: "12px",
+              marginBottom: "4px",
+            }}
+          >
+            Additional Services Available:
+          </div>
+          <div style={{ fontSize: "11px" }}>
+            • All types of sheet fabrication work
+            <br />
+            • Machinery parts manufacturing
+            <br />
+            • Gear cutting and manufacturing
+            <br />• Machine maintenance and repair
+          </div>
         </div>
       </Card>
     </div>
